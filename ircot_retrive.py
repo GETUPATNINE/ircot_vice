@@ -122,7 +122,7 @@ class AQuaRetriever:
                 titles.append(title)
                 contents.append(content)
             
-            print(f"Retrieved {len(titles)} similar questions from training data")
+            # print(f"Retrieved {len(titles)} similar questions from training data")
             return titles, contents
             
         except Exception as e:
@@ -223,7 +223,7 @@ class IRCoTSystem:
         # 使用glm-z1-flash生成推理句子
         generated_texts = self.generator.generate_text_sequence(prompt, max_length=400)
         new_generation = generated_texts
-                    
+        
         return new_generation
     
     def retrieve_step(self, cot_sentence, existing_titles=None, existing_contents=None):
@@ -243,23 +243,24 @@ class IRCoTSystem:
                 all_titles.append(title)
                 all_contents.append(content)
             else:
-                print(f"Warning: Duplicate title found: {title}")
+                # print(f"Warning: Duplicate title found: {title}")
+                pass
                 
         return all_titles, all_contents
     
     def run(self, question, options):
         """运行完整的IRCoT过程"""
         # 初始检索
-        print("--------- Start initial retrieval ---------")
+        # print("--------- Start initial retrieval ---------")
         titles, contents = self.initial_retrieval(question)
-        print(f"Initial retrieval returned {len(titles)} documents")
+        # print(f"Initial retrieval returned {len(titles)} documents")
         
         # 交替迭代
         generated_sentences = []
         
-        print("--------- Start alternating iteration ---------")
+        # print("--------- Start alternating iteration ---------")
         for i in range(self.max_iterations):
-            print(f"\n--------- Iteration {i+1} ---------")
+            # print(f"\n--------- Iteration {i+1} ---------")
             
             # Reason步骤 - 生成下一个CoT句子
             new_sentence = self.reason_step(question, options, contents, generated_sentences)
@@ -267,7 +268,7 @@ class IRCoTSystem:
             
             # Retrieve步骤 - 使用新的CoT句子进行检索
             titles, contents = self.retrieve_step(new_sentence, titles, contents)
-            print(f"Got {len(titles)} documents in total")
+            # print(f"Got {len(titles)} documents in total")
 
         result = {
             "question": question,
